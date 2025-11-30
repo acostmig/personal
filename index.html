@@ -291,6 +291,13 @@
         font-weight: 500;
       }
 
+      .blog-categories {
+        color: #999;
+        font-size: 0.6875rem;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
       .loading {
         display: flex;
         justify-content: center;
@@ -331,6 +338,15 @@
           min-width: 60px;
           height: 60px;
           padding: 12px;
+        }
+
+        .blog-excerpt {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     </style>
@@ -416,7 +432,9 @@
               // Extract excerpt from description (remove HTML tags and limit length)
               const tempDiv = document.createElement('div');
               tempDiv.innerHTML = post.description;
-              const excerpt = tempDiv.textContent.substring(0, 150) + '...';
+              const isMobile = window.innerWidth <= 640;
+              const excerptLength = isMobile ? 100 : 200;
+              const excerpt = tempDiv.textContent.substring(0, excerptLength) + '...';
 
               // Format date
               const date = new Date(post.pubDate);
@@ -426,11 +444,6 @@
                 day: 'numeric'
               });
 
-              // Get publication name from categories or use author
-              const publication = post.categories && post.categories.length > 0
-                ? post.categories[0]
-                : 'Medium';
-
               // Create list item
               const li = document.createElement('li');
               li.className = 'blog-item';
@@ -438,7 +451,7 @@
                 <a href="${post.link}" target="_blank" rel="noopener noreferrer">
                   <div class="blog-title">${post.title}</div>
                   <div class="blog-excerpt">${excerpt}</div>
-                  <div class="blog-meta">${formattedDate} • ${publication}</div>
+                  <div class="blog-meta">${formattedDate}</div>
                 </a>
               `;
 
